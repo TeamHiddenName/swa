@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 public class SearchService {
 
     private final ProductDao productDao;
+    private ProductRepository productRepository;
 
     public SearchService(ProductDao productDao) {
         this.productDao = productDao;
+        productRepository.f
     }
 
     public List<SearchResult> search(double minPrice, double maxPrice, String description) {
