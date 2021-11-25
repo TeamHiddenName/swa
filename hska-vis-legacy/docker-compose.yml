@@ -10,62 +10,33 @@ services:
               - legacywebshop
 
   web-shop-db-image:
-    image: mavogel/hska-vis-web-shop-db-image
+    image: docker.io/library/local-database
     volumes:
-      - "./.data/db:/var/lib/mysql"
+      - "./docker/sql:/docker-entrypoint-initdb.d"
     environment:
       MYSQL_ROOT_PASSWORD: c8de110f37300a53a971749
-      MYSQL_DATABASE: webshop
-      MYSQL_USER: webshopuser
-      MYSQL_PASSWORD: 240b2c6d58ff2ce2f508b49f
     ports:
       - "3306:3306"
     networks:
         local_dev_net:
             aliases:
                 - web-shop-db-image
-
-  product-db-image:
-    image: mavogel/hska-vis-web-shop-db-image
-    volumes:
-      - "./.data/db:/var/lib/mysql"
-    environment:
-      MYSQL_ROOT_PASSWORD: c8de110f37300a53a971749
-      MYSQL_DATABASE: webshop
-      MYSQL_USER: webshopuser
-      MYSQL_PASSWORD: 240b2c6d58ff2ce2f508b49f
+  product-ms:
+    image: docker.io/library/product-ms
     ports:
-      - "3306:3306"
+      - "8887:8080"
     networks:
       local_dev_net:
         aliases:
-          - product-db-image
-
-  category-db-image:
-    image: mavogel/hska-vis-web-shop-db-image
-    volumes:
-      - "./.data/db:/var/lib/mysql"
-    environment:
-      MYSQL_ROOT_PASSWORD: c8de110f37300a53a971749
-      MYSQL_DATABASE: webshop
-      MYSQL_USER: webshopuser
-      MYSQL_PASSWORD: 240b2c6d58ff2ce2f508b49f
+          - product-ms
+  category-ms:
+    image: docker.io/library/category-ms
     ports:
-      - "3306:3306"
+      - "8886:8080"
     networks:
       local_dev_net:
         aliases:
-          - category-db-image
-
-  searchms:
-    image: searchms
-    ports:
-      - "8080:8080"
-    networks:
-      local_dev_net:
-        aliases:
-          - searchms
-
+          - category-ms
 networks:
   local_dev_net:
     driver: bridge
