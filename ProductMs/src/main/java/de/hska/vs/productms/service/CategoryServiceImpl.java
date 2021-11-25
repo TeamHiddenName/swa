@@ -16,4 +16,9 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(int id) {
         productRepository.deleteByCategory(id);
     }
+
+    @Override
+    public boolean canDelete(int id) {
+        return productRepository.countAllByCategory(id) == 0;
+    }
 }

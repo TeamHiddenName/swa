@@ -18,12 +18,12 @@ public class RestProductController {
     }
 
     @GetMapping(produces = "application/json")
-    public List<ProductEntity> getAll() {
+    public List<ProductDto> getAll() {
         return productService.findAll();
     }
 
     @GetMapping(produces = "application/json")
-    public List<ProductEntity> getAllByCategory(@RequestParam(required = false, defaultValue = "0") int categoryId){
+    public List<ProductDto> getAllByCategory(@RequestParam(required = false, defaultValue = "0") int categoryId){
         return productService.findAllByCategory(categoryId);
     }
 
@@ -33,9 +33,9 @@ public class RestProductController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<ProductEntity> createProduct(@RequestBody ProductEntity productEntity) {
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productEntity) {
 
-        Optional<ProductEntity> result = productService.addProduct(productEntity);
+        Optional<ProductDto> result = productService.addProduct(productEntity);
         return ResponseEntity.of(result);
     }
 }
