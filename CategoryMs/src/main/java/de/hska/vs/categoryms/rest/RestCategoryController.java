@@ -29,8 +29,12 @@ public class RestCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(int id) {
-        categoryService.deleteCategory(id);
+    public ResponseEntity<Void> delete(@PathVariable  int id) {
+        if (categoryService.deleteCategory(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping

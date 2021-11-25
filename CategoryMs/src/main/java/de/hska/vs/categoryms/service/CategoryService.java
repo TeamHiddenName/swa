@@ -9,7 +9,7 @@ public interface CategoryService {
 
     Optional<CategoryEntity> createCategory(CategoryEntity category);
 
-    void deleteCategory(int id);
+    boolean deleteCategory(int id);
 
     boolean updateCategory(CategoryEntity category);
 
