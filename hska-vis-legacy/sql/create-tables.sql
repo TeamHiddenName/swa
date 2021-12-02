@@ -37,7 +37,7 @@ CREATE INDEX FK74aoh99stptslhotgf41fitt0 ON webshop.customer (role ASC);
 CREATE INDEX FK1mtsbur82frn64de7balymq9s ON webshop.product (category_id ASC);
 
 
-CREATE TABLE product-db.product (
+CREATE TABLE productdb.product (
     id INT NOT NULL AUTO_INCREMENT,
     details VARCHAR(255),
     name VARCHAR(255),
@@ -46,9 +46,9 @@ CREATE TABLE product-db.product (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
-CREATE INDEX FK1mtsbur82frn64de7balymq9t ON product-db.product (category_id ASC);
+CREATE INDEX FK1mtsbur82frn64de7balymq9t ON productdb.product (category_id ASC);
 
-CREATE TABLE category-db.category (
+CREATE TABLE categorydb.category (
                                   id INT NOT NULL AUTO_INCREMENT,
                                   name VARCHAR(255) NOT NULL,
                                   PRIMARY KEY (id)

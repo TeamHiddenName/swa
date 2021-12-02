@@ -2,6 +2,8 @@ version: '3.2'
 services:
   legacywebshop:
     image: mavogel/hska-vis-legacywebshop
+    depends_on:
+      - web-shop-db-image
     ports:
       - "8888:8080"
     networks:
@@ -11,8 +13,10 @@ services:
 
   web-shop-db-image:
     image: docker.io/library/local-database
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - "./docker/sql:/docker-entrypoint-initdb.d"
+      - "./sql:/docker-entrypoint-initdb.d"
+      - "./data-volume:/var/lib/mysql"
     environment:
       MYSQL_ROOT_PASSWORD: c8de110f37300a53a971749
     ports:
@@ -23,6 +27,9 @@ services:
                 - web-shop-db-image
   product-ms:
     image: docker.io/library/product-ms
+    restart: always
+    depends_on:
+      - web-shop-db-image
     ports:
       - "8887:8080"
     networks:
@@ -31,6 +38,9 @@ services:
           - product-ms
   category-ms:
     image: docker.io/library/category-ms
+    restart: always
+    depends_on:
+      - web-shop-db-image
     ports:
       - "8886:8080"
     networks:

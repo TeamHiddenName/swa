@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
-@RestController("/product")
+@RestController
 public class RestProductController {
 
     private final ProductService productService;
@@ -17,22 +16,20 @@ public class RestProductController {
         this.productService = productService;
     }
 
-    @GetMapping(produces = "application/json")
-    public List<ProductDto> getAll() {
+    @GetMapping(value = "/product/", produces = "application/json")
+    public List<ProductDto> getAll(@RequestParam(required = false, defaultValue = "0") int categoryId) {
+        if(categoryId > 0){
+            return productService.findAllByCategory(categoryId);
+        }
         return productService.findAll();
     }
 
-    @GetMapping(produces = "application/json")
-    public List<ProductDto> getAllByCategory(@RequestParam(required = false, defaultValue = "0") int categoryId){
-        return productService.findAllByCategory(categoryId);
-    }
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/product/{id}")
     public void delete(@PathVariable int id) {
         productService.deleteProduct(id);
     }
 
-    @PostMapping(produces = "application/json")
+    @PostMapping(value = "/product",produces = "application/json")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productEntity) {
 
         Optional<ProductDto> result = productService.addProduct(productEntity);

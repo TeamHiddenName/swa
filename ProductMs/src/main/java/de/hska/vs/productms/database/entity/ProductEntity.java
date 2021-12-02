@@ -1,11 +1,9 @@
 package de.hska.vs.productms.database.entity;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-
+@Entity
+@Table(name = "product")
 public class ProductEntity {
 
     private static final long serialVersionUID = 1L;
