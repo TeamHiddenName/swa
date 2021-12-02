@@ -15,6 +15,7 @@ hs_err_pid*
 
 # mysql folder on disc
 .data
+data-volume/
 
 # Eclipse
 .classpath
