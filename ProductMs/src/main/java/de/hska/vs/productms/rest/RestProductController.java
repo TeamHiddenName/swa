@@ -1,6 +1,5 @@
 package de.hska.vs.productms.rest;
 
-import de.hska.vs.productms.database.entity.ProductEntity;
 import de.hska.vs.productms.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,14 @@ public class RestProductController {
         this.productService = productService;
     }
 
-    @GetMapping(value = "/product/", produces = "application/json")
-    public List<ProductDto> getAll(@RequestParam(required = false, defaultValue = "0") int categoryId) {
-        if(categoryId > 0){
-            return productService.findAllByCategory(categoryId);
-        }
+    @GetMapping(value = "/product", produces = "application/json")
+    public List<ProductDto> getAll() {
         return productService.findAll();
+    }
+
+    @GetMapping(value = "/product?categoryId={categoryId}", produces = "application/json")
+    public List<ProductDto> getAllByCategory(@RequestParam(defaultValue = "0") int categoryId) {
+            return productService.findAllByCategory(categoryId);
     }
 
     @DeleteMapping(value = "/product/{id}")
@@ -29,7 +30,7 @@ public class RestProductController {
         productService.deleteProduct(id);
     }
 
-    @PostMapping(value = "/product",produces = "application/json")
+    @PostMapping(value = "/product", produces = "application/json")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productEntity) {
 
         Optional<ProductDto> result = productService.addProduct(productEntity);

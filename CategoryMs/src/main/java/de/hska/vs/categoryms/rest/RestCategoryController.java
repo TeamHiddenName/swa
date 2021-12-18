@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController()
-@RequestMapping("/category")
+@RequestMapping("")
 public class RestCategoryController {
 
     private final CategoryService categoryService;
@@ -18,18 +18,18 @@ public class RestCategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/category/{id}")
     public ResponseEntity<CategoryEntity> getCategory(@PathVariable int id) {
         Optional<CategoryEntity> result = categoryService.getCategory(id);
         return ResponseEntity.of(result);
     }
 
-    @GetMapping()
+    @GetMapping(value = "/category")
     public List<CategoryEntity> getAllCategories() {
         return categoryService.getAll();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/category/{id}")
     public ResponseEntity<Void> delete(@PathVariable  int id) {
         if (categoryService.deleteCategory(id)) {
             return ResponseEntity.noContent().build();
@@ -38,12 +38,12 @@ public class RestCategoryController {
         }
     }
 
-    @PostMapping
+    @PostMapping(value = "/category")
     public ResponseEntity<CategoryEntity> create(@RequestBody String name) {
         return ResponseEntity.of(categoryService.createCategory(new CategoryEntity(name)));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping(value = "/category/{id}")
     public void update(@PathVariable int id, @RequestBody String name) {
         categoryService.updateCategory(new CategoryEntity(id, name));
     }
