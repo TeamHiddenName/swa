@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-ms
+  labels:
+    app: product-ms
+spec:
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: product-ms
+    
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-ms
+  labels:
+    app: product-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-ms
+  template:
+    metadata:
+      labels:
+        app: product-ms
+    spec:
+      containers:
+        - image: localhost:5000/product-ms
+          name: product-ms
+          ports:
+            - containerPort: 8080

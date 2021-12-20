@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-shop-db-image
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: web-shop-db-image
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-shop-db-image
+spec:
+  selector:
+    matchLabels:
+      app: web-shop-db-image
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: web-shop-db-image
+    spec:
+      containers:
+      - image: localhost:5000/web-shop-db-image
+        name: web-shop-db-image
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: c8de110f37300a53a971749
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
