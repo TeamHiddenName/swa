@@ -46,7 +46,7 @@ docker run -d -p 5000:5000 --restart=always --name registry registry:2
     ```bash
     kubectl apply -f samples/addons
     ```
-    
+
      ```bash
     istioctl analyzekubectl rollout status deployment/kiali -n istio-system
     ```
@@ -62,3 +62,8 @@ docker run -d -p 5000:5000 --restart=always --name registry registry:2
     ```bash
     minikube service rproxy
     ```
+
+Services sind verfügbar unter: 
+- Legacy-Eshop: [ReverseProxyIP:Port]/legacy/EShop-1.0.0
+- ProductMS: [ReverseProxyIP:Port]/product/product/
+- CategoryMS: [ReverseProxyIP:Port]/category/category/
