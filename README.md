@@ -43,6 +43,10 @@ docker run -d -p 5000:5000 --restart=always --name registry registry:2
     istioctl analyze
     ```
 
+    ```bash
+    kubectl apply -f samples/addons
+    ```
+    
      ```bash
     istioctl analyzekubectl rollout status deployment/kiali -n istio-system
     ```
