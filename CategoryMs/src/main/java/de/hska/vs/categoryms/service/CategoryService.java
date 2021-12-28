@@ -15,5 +15,9 @@ public interface CategoryService {
 
     Optional<CategoryEntity> getCategory(int id);
 
+    Optional<CategoryEntity> getCategory(String name);
+
     List<CategoryEntity> getAll();
+
+
 }

@@ -2,11 +2,10 @@ package de.hska.vs.categoryms.service;
 
 import de.hska.vs.categoryms.database.entity.CategoryEntity;
 import de.hska.vs.categoryms.database.repository.CategoryRepository;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +30,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean deleteCategory(int id) {
         RestTemplate restTemplate = new RestTemplate();
-        Boolean result = restTemplate.getForObject("http://product-web/category/deletable/" + id, Boolean.class);
-        if (result != null && result) {
-            restTemplate.delete("http://product-web/category/" + id);
+        Object[] result = restTemplate.getForObject("http://product-ms:8080/product?categoryId=" + id, Object[].class);
+        if (result == null || result.length == 0) {
             categoryRepository.deleteById(id);
             return true;
         }
@@ -53,6 +51,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Optional<CategoryEntity> getCategory(int id) {
         return categoryRepository.findById(id);
+    }
+
+    @Override
+    public Optional<CategoryEntity> getCategory(String name) {
+        return categoryRepository.findCategoryEntityByName(name);
     }
 
     @Override

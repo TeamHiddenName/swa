@@ -6,7 +6,19 @@
   <groupId>de.hska.iwi</groupId>
   <artifactId>EShop</artifactId>
   <version>1.0.0</version>
-  <packaging>war</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <packaging>war</packaging>
 
   	<properties>
 		<java-version>1.8</java-version>

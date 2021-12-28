@@ -1,7 +1,5 @@
 package de.hska.vs.productms.service;
 
-import de.hska.vs.productms.database.entity.ProductEntity;
-import de.hska.vs.productms.database.repository.ProductRepository;
 import de.hska.vs.productms.rest.ProductDto;
 
 import java.util.List;
@@ -16,4 +14,8 @@ public interface ProductService {
     void deleteProduct(int id);
 
     Optional<ProductDto> addProduct(ProductDto productEntity);
+
+    Optional<ProductDto> findById(int id);
+
+    Optional<ProductDto> findByName(String name);
 }

@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   legacywebshop:
-    image: mavogel/hska-vis-legacywebshop
+    image: docker.io/library/legacywebshop
     depends_on:
       - web-shop-db-image
     ports:
