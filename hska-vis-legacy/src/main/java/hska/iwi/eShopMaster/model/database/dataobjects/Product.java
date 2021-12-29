@@ -66,4 +66,14 @@ public class Product implements java.io.Serializable {
 		this.details = details;
 	}
 
+	@Override
+	public String toString() {
+		return "Product{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", price=" + price +
+				", category=" + category +
+				", details='" + details + '\'' +
+				'}';
+	}
 }

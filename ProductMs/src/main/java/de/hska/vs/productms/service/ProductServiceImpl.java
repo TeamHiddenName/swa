@@ -4,14 +4,14 @@ import de.hska.vs.productms.database.entity.ProductEntity;
 import de.hska.vs.productms.database.repository.ProductRepository;
 import de.hska.vs.productms.rest.CategoryDto;
 import de.hska.vs.productms.rest.ProductDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -29,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findAll() {
-
+        LOG.debug("Find all called");
         List<ProductEntity> productEntities = productRepository.findAll();
 
         List<ProductDto> productList = new ArrayList<>();
@@ -38,50 +40,58 @@ public class ProductServiceImpl implements ProductService {
             CategoryDto result = restTemplate.getForObject("http://category-ms:8080/category/" + entity.getCategory(), CategoryDto.class);
             productList.add(convert(entity, result));
         }
+        LOG.info("Found " + productList.size() + " products");
         return productList;
     }
 
     @Override
     public List<ProductDto> findAllByCategory(int categoryId) {
 
-
+        LOG.debug("Find all by category for categoryId " + categoryId);
         Optional<CategoryDto> categoryDto = getCategory(categoryId);
+        List<ProductDto> result;
         if (categoryDto.isPresent()) {
             List<ProductEntity> productEntities = productRepository.findAllByCategory(categoryId);
-            return productEntities
+            result = productEntities
                     .stream()
                     .map(entity -> convert(entity, categoryDto.get()))
                     .collect(Collectors.toList());
         } else {
-            return Collections.emptyList();
+            result = Collections.emptyList();
         }
+        LOG.info("Found " + result.size() + " products for category with id " + categoryId);
+        return result;
     }
 
     @Override
     public void deleteProduct(int id) {
+        LOG.info("Deleting product with id " + id);
         productRepository.deleteById(id);
     }
 
     @Override
     public Optional<ProductDto> addProduct(ProductDto productDto) {
+        LOG.debug("Adding product " + productDto);
         if (!validateProduct(productDto)) {
+            LOG.info("Product not created. Was invalid");
             return Optional.empty();
         }
         ProductEntity entity = new ProductEntity(productDto.getName(), productDto.getPrice(), productDto.getCategory().getId(), productDto.getDetails());
         ProductEntity saved = productRepository.save(entity);
-        return Optional.of(convert(saved, productDto.getCategory()));
+        ProductDto result = convert(saved, productDto.getCategory());
+        LOG.info("Successfully created product " + result);
+        return Optional.of(result);
     }
 
     @Override
     public Optional<ProductDto> findById(int id) {
-
+        LOG.debug("Getting product by id " + id);
         Optional<ProductEntity> product = productRepository.findById(id);
 
         if (product.isPresent()) {
-            RestTemplate restTemplate = new RestTemplate();
-            CategoryDto result = restTemplate.getForObject("http://category-ms:8080/category/" + product.get().getCategory(), CategoryDto.class);
-            return Optional.of(convert(product.get(), result));
+            return composeProduct(product.get());
         } else {
+            LOG.info("Did not find product with id " + id);
             return Optional.empty();
         }
 
@@ -89,22 +99,36 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<ProductDto> findByName(String name) {
+        LOG.debug("Getting product by name " + name);
         Optional<ProductEntity> product = productRepository.findByName(name);
 
         if (product.isPresent()) {
-            RestTemplate restTemplate = new RestTemplate();
-            CategoryDto result = restTemplate.getForObject("http://category-ms:8080/category/" + product.get().getCategory(), CategoryDto.class);
-            return Optional.of(convert(product.get(), result));
+            return composeProduct(product.get());
         } else {
+            LOG.info("Did not find product with name " + name);
+            return Optional.empty();
+        }
+    }
+
+    private Optional<ProductDto> composeProduct(ProductEntity product) {
+        Optional<CategoryDto> category = getCategory(product.getCategory());
+        if (category.isPresent()) {
+            ProductDto result = convert(product, category.get());
+            LOG.info("Found product " + result);
+            return Optional.of(result);
+        } else {
+            LOG.info("Did not find category with id " + product.getCategory());
             return Optional.empty();
         }
     }
 
     private boolean validateProduct(ProductDto product) {
         if (product.getCategory().getId() == 0 || !getCategory(product.getCategory().getId()).isPresent()) {
+            LOG.debug("Category of product " + product + " was invalid");
             return false;
         }
         if (product.getName() == null || product.getName().isEmpty()) {
+            LOG.debug("Product name was invalid");
             return false;
         }
         return !(product.getPrice() < 0);

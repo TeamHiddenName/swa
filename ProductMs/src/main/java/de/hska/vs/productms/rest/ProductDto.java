@@ -43,4 +43,15 @@ public class ProductDto {
     public String getDetails() {
         return details;
     }
+
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", category=" + category +
+                ", details='" + details + '\'' +
+                '}';
+    }
 }

@@ -2,6 +2,8 @@ package hska.iwi.eShopMaster.model.ms;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.util.Optional;
 
 public class BasePostRequest<T> {
 
+    private static final Logger LOG = LogManager.getLogger();
     private final String url;
     private final Gson gson = new Gson();
 
@@ -24,7 +27,12 @@ public class BasePostRequest<T> {
     public Optional<T> postAsJson(Object body, Class<T> clazz) {
 
         try {
-            return postInternal(gson.toJson(body), clazz);
+            long startTime = System.currentTimeMillis();
+            Optional<T> result = postInternal(gson.toJson(body), clazz);
+            long stopTime = System.currentTimeMillis();
+            long duration = stopTime - startTime;
+            LOG.info("Post request for url " + url + " took ms: " + duration);
+            return result;
         } catch (IOException | JsonSyntaxException e) {
             e.printStackTrace();
             return Optional.empty();
@@ -33,7 +41,12 @@ public class BasePostRequest<T> {
 
     public Optional<T> post(String body, Class<T> clazz) {
         try {
-            return postInternal(body, clazz);
+            long startTime = System.currentTimeMillis();
+            Optional<T> result = postInternal(body, clazz);
+            long stopTime = System.currentTimeMillis();
+            long duration = stopTime - startTime;
+            LOG.info("Post request for url " + url + " took ms: " + duration);
+            return result;
         } catch (IOException | JsonSyntaxException e) {
             e.printStackTrace();
             return Optional.empty();

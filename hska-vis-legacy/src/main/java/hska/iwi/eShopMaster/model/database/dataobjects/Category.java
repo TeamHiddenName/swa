@@ -30,4 +30,11 @@ public class Category implements java.io.Serializable {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
