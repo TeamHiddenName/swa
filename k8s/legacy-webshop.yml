@@ -30,7 +30,7 @@ spec:
         app: legacy-webshop
     spec:
       containers:
-        - image: mavogel/hska-vis-legacywebshop
+        - image: localhost:5000/legacy-webshop
           name: legacy-webshop
           ports:
             - containerPort: 8080
